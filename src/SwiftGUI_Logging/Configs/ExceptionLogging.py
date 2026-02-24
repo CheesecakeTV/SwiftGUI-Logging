@@ -59,7 +59,7 @@ def exceptions_to_file(
         # Add current datetime to filename
         actual_filepath = filepath.parent / (filepath.stem + dt.now().strftime(datetime_format) + filepath.suffix)
 
-        with open(actual_filepath, "w") as f:
+        with open(actual_filepath, "a") as f:
             stream.seek(0)
             shutil.copyfileobj(stream, f)
 

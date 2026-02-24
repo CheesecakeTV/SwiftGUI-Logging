@@ -63,10 +63,32 @@ if __name__ == '__main__':
 
 You'll find that the directory `Crashlogs` was created.
 After the program executes, the directory contains a file like
-`Crash_2026-02-24_16-16-38.log`.
+`Crash_2026-02-24_16-33-52.log`.
 
 As you can see, the time of the crash was inserted into the 
 filename, so that multiple crashlogs don't overwrite each other.
+
+The file contains the most recent log-entries (from `logging.debug` and `logging.info`)
+and the exception with full traceback:
+```log
+2026-02-24 16:33:49,940 - root - DEBUG - Test 0
+2026-02-24 16:33:50,197 - root - DEBUG - Test 1
+2026-02-24 16:33:50,451 - root - DEBUG - Test 2
+2026-02-24 16:33:50,704 - root - DEBUG - Test 3
+2026-02-24 16:33:50,958 - root - DEBUG - Test 4
+2026-02-24 16:33:51,214 - root - DEBUG - Test 5
+2026-02-24 16:33:51,469 - root - DEBUG - Test 6
+2026-02-24 16:33:51,723 - root - DEBUG - Test 7
+2026-02-24 16:33:51,979 - root - DEBUG - Test 8
+2026-02-24 16:33:52,235 - root - DEBUG - Test 9
+2026-02-24 16:33:52,490 - root - INFO - Crashing the program now
+2026-02-24 16:33:52,490 - root - ERROR - Traceback (most recent call last):
+  File "C:\Users\chees\PycharmProjects\SwiftGUI-Logging\tests\test.py", line 17, in <module>
+    main()  # Execute program
+  File "C:\Users\chees\PycharmProjects\SwiftGUI-Logging\tests\test.py", line 13, in main
+    1 / 0   # Cause a ZeroDivisionError, which crashes the program
+ZeroDivisionError: division by zero
+```
 
 `sgl.Configs.exceptions_to_file` can do a bit more, but for most programs,
 the default configuration is fine.
