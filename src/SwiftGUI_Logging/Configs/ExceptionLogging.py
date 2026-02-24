@@ -37,8 +37,6 @@ def exceptions_to_file(
     filepath = Path(filepath)
     filepath.parent.mkdir(parents=True, exist_ok=True)
 
-    filepath = filepath.parent / (filepath.stem + dt.now().strftime(datetime_format) + filepath.suffix)
-
     if isinstance(logger, str):
         logger = logging.getLogger(logger)
 
@@ -49,21 +47,29 @@ def exceptions_to_file(
     stream_handler.setFormatter(
         logging.Formatter(formatter_format)
     )
-    buffer_handler = sgl.MemoryHandlerRotatingBuffer(buffer_size, trigger_level, target=stream_handler)
-
-    logger.addHandler(buffer_handler)
 
     def exception_occured(*_):
+        nonlocal stream
         stream.seek(0)
+
         if not stream.read(1):
             # Nothing to report
-            print("Nothing to report")
             return
 
-        with open(filepath, "w") as f:
+        # Add current datetime to filename
+        actual_filepath = filepath.parent / (filepath.stem + dt.now().strftime(datetime_format) + filepath.suffix)
+
+        with open(actual_filepath, "w") as f:
             stream.seek(0)
-            #f.write(stream.read())
             shutil.copyfileobj(stream, f)
+
+        stream.close()
+        stream = io.StringIO()  # "Clear" the buffer
+        stream_handler.setStream(stream)
+
+    buffer_handler = sgl.MemoryHandlerRotatingBuffer(buffer_size, trigger_level, target=stream_handler, call_after_flushing=exception_occured)
+
+    logger.addHandler(buffer_handler)
 
     sgl.reroute_exceptions(logger, reraise=reraise, loglevel=trigger_level, pass_text_to_function=exception_occured)
 
