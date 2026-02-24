@@ -3,17 +3,14 @@ import SwiftGUI_Logging as sgl
 import logging
 
 def main():
-    for k in range(3):
-        for i in range(10):
-            logging.debug(f"Test {i}")
-            print(i)
-            time.sleep(0.15)
+    for i in range(10):
+        logging.debug(f"Test {i}")
+        print(i)
+        time.sleep(0.25)
 
-        logging.error(f"Hehehe {k}")
-
-    time.sleep(1)
     logging.info("Crashing the program now")
 
+    logging.critical("CRITICAL")
     1 / 0   # Cause a ZeroDivisionError, which crashes the program
 
 if __name__ == '__main__':
