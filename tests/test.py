@@ -10,7 +10,7 @@ def main():
 
     logging.info("Crashing the program now")
 
-    logging.critical("CRITICAL")
+    # logging.critical("CRITICAL")
     1 / 0   # Cause a ZeroDivisionError, which crashes the program
 
 if __name__ == '__main__':

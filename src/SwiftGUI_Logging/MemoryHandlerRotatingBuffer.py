@@ -20,6 +20,7 @@ class MemoryHandlerRotatingBuffer(logging.handlers.MemoryHandler):
         """
         super().__init__(capacity, flushLevel, target, flushOnClose=False)
         self.call_after_flushing = call_after_flushing if call_after_flushing else lambda *_:_
+        self._should_flush = False
 
     def shouldFlush(self, record):
         """
@@ -30,10 +31,17 @@ class MemoryHandlerRotatingBuffer(logging.handlers.MemoryHandler):
         if len(self.buffer) > self.capacity:    # Remove 0th element so the buffer doesn't "overflow"
             self.buffer.pop(0)
 
-        return record.levelno >= self.flushLevel
+        if record.levelno >= self.flushLevel:
+            self._should_flush = True
+            return True
+
+        return False
 
     def flush(self):
-        super().flush()
-        self.call_after_flushing()
+        super().flush() # Don't put this in the if, this is necessary due to Python-magic...
+
+        if self._should_flush:
+            self.call_after_flushing()
+            self._should_flush = False
 
 
