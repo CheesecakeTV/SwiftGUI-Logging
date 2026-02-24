@@ -3,15 +3,17 @@ import time
 import SwiftGUI_Logging as sgl
 import logging
 
-#logging.basicConfig()
+logging.basicConfig()
 #sgl.disable_root_handlers()
-sgl.Configs.exceptions_to_file("debug/test/blabli/Test.log")
+sgl.Configs.exceptions_to_file("debug/test/blabli/Test.log", buffer_size=3)
 
-#my_logger = logging.getLogger("SwiftGUI")
+my_logger = logging.getLogger("SwiftGUI")
 
 for i in range(10):
-    logging.debug(f"Test {i}")
+    my_logger.warning(f"Test {i}")
     print(i)
     time.sleep(0.25)
 
 #1 / 0
+raise BufferError()
+
