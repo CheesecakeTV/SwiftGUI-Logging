@@ -11,6 +11,9 @@ def exceptions_to_file(
         buffer_size: int = 5000,
         trigger_level: int = logging.ERROR,
         log_level: int = logging.DEBUG,
+        include_main_thread: bool = True,
+        include_threads: bool = True,
+        include_tkinter: bool = True,
         reraise: bool = False,
         datetime_format: str = "_%Y-%m-%d_%H-%M-%S",
         formatter_format: str = "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
@@ -29,6 +32,9 @@ def exceptions_to_file(
     :param buffer_size: How many reports are saved before the first ones are overritten again
     :param trigger_level: Level at which the exceptions are treated. Reports at and above this level trigger a file-write
     :param log_level: Logs below this level are ignored and not written to the file
+    :param include_main_thread: True, if the "normal thread's" exceptions should be caught
+    :param include_threads: True, if Thread-exceptions should be caught too
+    :param include_tkinter: True, if Tkinter-exceptions should be caught too
     :param reraise: True, if the exception should still be raised, even though it was logged. Good for debugging purposes
     :param datetime_format: Format of the timestamp that extends the filename
     :param formatter_format: Format of the log-entries in the file
@@ -71,5 +77,13 @@ def exceptions_to_file(
 
     logger.addHandler(buffer_handler)
 
-    sgl.reroute_exceptions(logger, reraise=reraise, loglevel=trigger_level, pass_text_to_function=exception_occured)
+    sgl.reroute_exceptions(
+        logger,
+        reraise=reraise,
+        loglevel=trigger_level,
+        pass_text_to_function=exception_occured,
+        include_main_thread=include_main_thread,
+        include_threads=include_threads,
+        include_tkinter=include_tkinter,
+    )
 
