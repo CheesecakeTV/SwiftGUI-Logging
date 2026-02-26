@@ -21,7 +21,7 @@ def reroute_exceptions(
         reraise: bool = False,
         print_to_console: bool = False,
         pass_text_to_function: Callable[[str], Any] = None,
-):
+) -> Callable:
     """
     Catch all unhandled exceptions and log them
 
@@ -35,7 +35,7 @@ def reroute_exceptions(
     :param include_tkinter: True, if Tkinter-exceptions should be caught too
     :param pass_text_to_function: Pass a function/method and the exception-text is passed to it
     :param print_to_console: True, if the text should be printed to the console using print(...)
-    :return:
+    :return: Returns the function that gets called with the exception-info. You may use it to add your own exception-"catching"
     """
     if logger_warnings is None:
         logger_warnings = logger
@@ -94,6 +94,7 @@ def reroute_exceptions(
 
         tk.Tk.report_callback_exception = catch_tkinter
 
+    return catch
 
 
 

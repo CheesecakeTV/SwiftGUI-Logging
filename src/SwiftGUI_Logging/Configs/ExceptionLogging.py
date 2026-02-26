@@ -1,3 +1,5 @@
+from typing import Callable
+
 import SwiftGUI_Logging as sgl
 from pathlib import Path
 import logging
@@ -17,7 +19,7 @@ def exceptions_to_file(
         reraise: bool = False,
         datetime_format: str = "_%Y-%m-%d_%H-%M-%S",
         formatter_format: str = "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-):
+) -> Callable:
     """
     Buffers the last n logging-entries.
     If the program executes as expected, nothing happens.
@@ -38,7 +40,7 @@ def exceptions_to_file(
     :param reraise: True, if the exception should still be raised, even though it was logged. Good for debugging purposes
     :param datetime_format: Format of the timestamp that extends the filename
     :param formatter_format: Format of the log-entries in the file
-    :return:
+    :return: Returns the function that gets called with the exception-info. You may use it to add your own exception-"catching"
     """
     filepath = Path(filepath)
     filepath.parent.mkdir(parents=True, exist_ok=True)
@@ -77,7 +79,7 @@ def exceptions_to_file(
 
     logger.addHandler(buffer_handler)
 
-    sgl.reroute_exceptions(
+    return sgl.reroute_exceptions(
         logger,
         reraise=reraise,
         loglevel=trigger_level,
